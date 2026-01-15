@@ -22,12 +22,14 @@ export interface WhereClause {
 
 export interface JoinClause {
   targetTable: string;
-  onLeft: string;  // Column in the main table
-  onRight: string; // Column in the target table
+  onLeft: string;
+  onRight: string;
 }
 
-export interface QueryResult<T = Row[]> {
+// FIX: Added 'newActiveDb' to signal context switching
+export interface QueryResult<T = any> {
   success: boolean;
   message?: string;
   data?: T;
+  newActiveDb?: string; 
 }

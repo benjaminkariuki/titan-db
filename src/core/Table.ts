@@ -126,4 +126,24 @@ export class Table {
 
     return count;
   }
+
+  // 1. Convert Table to JSON-friendly object
+  serialize(): any {
+    return {
+      schema: this.schema,
+      rows: Array.from(this.data.values()) // Convert Map to Array
+    };
+  }
+
+  // 2. Create a Table instance from JSON
+  static deserialize(data: any): Table {
+    const table = new Table(data.schema.name, data.schema.columns);
+    // Re-insert rows to rebuild indices automatically
+    data.rows.forEach((row: Row) => {
+      table.insert(row);
+    });
+    return table;
+  }
+
 }
+

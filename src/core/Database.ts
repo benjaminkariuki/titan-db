@@ -2,7 +2,7 @@ import { type ColumnSchema, type JoinClause, type QueryResult, type Row, type Wh
 import { Table } from './Table';
 
 export class Database {
-  private tables: Map<string, Table>;
+  public tables: Map<string, Table>;
 
   constructor() {
     this.tables = new Map();
@@ -90,4 +90,22 @@ export class Database {
     const count = table.delete(where);
     return { success: true, message: `${count} row(s) deleted.` };
   }
+
+  serialize(): any {
+    return Array.from(this.tables.entries()).map(([name, table]) => ({
+      name,
+      data: table.serialize()
+    }));
+  }
+
+  static deserialize(data: any[]): Database {
+    const db = new Database();
+    data.forEach((tData: any) => {
+      const table = Table.deserialize(tData.data);
+      db.tables.set(tData.name, table);
+    });
+    return db;
+  }
+
+
 }
